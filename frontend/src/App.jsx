@@ -1,16 +1,16 @@
-
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import ProductPage from './pages/ProductPage'
 import './App.css'
 
-function App() {
-  // const [count, setCount] = useState(0)
+// skapar client
+const queryClient = new QueryClient()
 
+const App = () => {
   return (
-    <>
-      // Tillfällig setup för att se så att ProductPage syns
-      <ProductPage />
-    </>
-  )
-}
+      <QueryClientProvider client={queryClient}>
+        <ProductPage />
+      </QueryClientProvider>
+    )
+  }
 
 export default App

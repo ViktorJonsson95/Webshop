@@ -68,6 +68,31 @@ app.post("/api/products/bulk", async (req, res) => {
     }
 });
 
+app.post("/api/orders", async (req, res) => {
+    try {
+        const orderData = req.body
+
+        if(!orderData.products || orderData.products.length === 0) {
+            return res.status(400).json({
+                error: "Lägg till produkter för att lägga en order!"
+            });
+        }
+
+        const docref = await db.collection("orders").add(orderData);
+
+        res.status(201).json ({
+            message: "Order skapad!",
+            id: docref.id,
+            order: orderData
+        });
+
+    } catch (error) {
+        res.status(500).json ({
+            error: "serverfel vid skapande av order."
+        });
+    }
+});
+
 app.get("/api/products", async (req, res) => {
     try {
         const snapshot = await db.collection("products").get();
@@ -86,20 +111,20 @@ app.get("/api/products", async (req, res) => {
 
 app.get("/api/products/:id", async (req, res) => {
     try {
-        const doc = await db
+        const productDoc = await db
         .collection("products")
         .doc(req.params.id)
         .get();
 
-        if (!doc.exists) {
+        if (!productDoc.exists) {
             return res.status(404).json ({
                 error: "produkten hittades inte."
             });
         }
 
         res.json ({
-            id: doc.id,
-            ...doc.data(),
+            id: productDoc.id,
+            ...productDoc.data(),
         });
 
     } catch (error) {
@@ -107,6 +132,24 @@ app.get("/api/products/:id", async (req, res) => {
     }
 });
 
-app.listen(3000, () => {
+app.get("/api/orders", async (req, res) => {
+    try {
+        const snapshot = await db.collection("orders").get()
+
+        const orders = snapshot.docs.map((orderDoc) => ({
+            id: orderDoc.id,
+            ...orderDoc.data()
+        }));
+
+        res.json(orders)
+
+    } catch (error) {
+        res.status(500).json ({
+            error: "serverfel vid hämtning av orders"
+        });
+    }
+});
+
+app.listen(PORT, () => {
     console.log("server körs på http://localhost:3000")
 });

@@ -3,3 +3,6 @@ node_modules/
 build/
 dist/
 *.log
+
+#Mac system files
+.DS_Store

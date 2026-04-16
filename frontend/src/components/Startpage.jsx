@@ -1,3 +1,4 @@
+// detta ska bytas ut mot GET produkter från backend senare
 const products = [
   {
     name: "Trådlösa Hörlurar Pro",
@@ -41,30 +42,28 @@ const products = [
   },
 ]
 
-const ProductCard = ({ product }) => {
-  return (
-    <div>
-      <img src={product.imageUrl} alt={product.name} />
-      <h3>{product.name}</h3>
-      <p>{product.description}</p>
-      <p>
-        <strong>{product.price} kr</strong>
-      </p>
-      <p>Lager: {product.stock}</p>
-      <button>Lägg i kundvagn</button>
-    </div>
-  )
-}
+import { useProducts } from "./hooks/useProducts"
 
-export default function Shop() {
+export default function Startpage() {
+  const { data, isLoading, error } = useProducts()
+
+  if (isLoading) {
+    return <h2>Laddar produkter...</h2>
+  }
+
+  if (error) {
+    return <h2>Något gick fel: {error.message}</h2>
+  }
+
   return (
     <div>
       <h1>Webbshop</h1>
-      <div>
-        {products.map((product, index) => (
-          <ProductCard key={index} product={product} />
-        ))}
-      </div>
+      {data.map((product) => (
+        <div key={product.id}>
+          <h3>{product.name}</h3>
+          <p>{product.price} kr</p>
+        </div>
+      ))}
     </div>
   )
 }

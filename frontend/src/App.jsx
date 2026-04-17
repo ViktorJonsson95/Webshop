@@ -1,12 +1,12 @@
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
-import TestShop from './components/TestShop';
+import TestShop from './dev/TestShop';
 
 const queryClient = new QueryClient();
 
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <h1>App</h1>
+      {/* TestShop ska bytas ut mot startpage */}
       <TestShop></TestShop>
     </QueryClientProvider>
   )

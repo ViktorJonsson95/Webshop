@@ -44,6 +44,12 @@ const products = [
 
 import { useProducts } from "./hooks/useProducts"
 
+const addToCart = (product) => {
+  const existingCart = JSON.parse(localStorage.getItem("cart")) || []
+  const updatedCart = [...existingCart, product]
+  localStorage.setItem("cart", JSON.stringify(updatedCart))
+}
+
 export default function Startpage() {
   const { data, isLoading, error } = useProducts()
 
@@ -62,6 +68,10 @@ export default function Startpage() {
         <div key={product.id}>
           <h3>{product.name}</h3>
           <p>{product.price} kr</p>
+
+          <button onClick={() => addToCart(product)}>
+            Lägg till i kundvagn
+          </button>
         </div>
       ))}
     </div>

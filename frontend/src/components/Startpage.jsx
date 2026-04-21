@@ -19,7 +19,7 @@ export default function Startpage() {
 
   return (
     <div>
-      <h1>Webbshop</h1>
+      <h1 className="border border-red-500">Webbshop</h1>
       {data.map((product) => (
         <div key={product.id}>
           <h3>{product.name}</h3>

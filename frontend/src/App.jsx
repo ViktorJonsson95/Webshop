@@ -1,16 +1,16 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import ProductPage from './pages/ProductPage'
-import './App.css'
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
+import TestShop from './dev/TestShop';
+import ProductPage from './components/ProductPage';
 
-// skapar client
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 const App = () => {
   return (
-      <QueryClientProvider client={queryClient}>
-        <ProductPage />
-      </QueryClientProvider>
-    )
-  }
+    <QueryClientProvider client={queryClient}>
+     
+      <ProductPage />
+    </QueryClientProvider>
+  )
+}
 
 export default App

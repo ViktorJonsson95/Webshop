@@ -1,4 +1,5 @@
 import { useProducts } from "../hooks/useProducts"
+import { Link } from "react-router-dom"
 
 const addToCart = (product) => {
   const existingCart = JSON.parse(localStorage.getItem("cart")) || []
@@ -22,9 +23,11 @@ export default function Startpage() {
       <h1 className="border border-red-500">Webbshop</h1>
       {data.map((product) => (
         <div key={product.id}>
-          <h3>{product.name}</h3>
-          <p>{product.price} kr</p>
-          <img src={product.imageUrl} alt={product.name} />
+          <Link to={`/product/${product.id}`}>
+            <h3>{product.name}</h3>
+            <p>{product.price} kr</p>
+            <img src={product.imageUrl} alt={product.name} />
+          </Link>
 
           <button onClick={() => addToCart(product)}>
             Lägg till i kundvagn

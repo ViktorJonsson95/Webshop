@@ -18,6 +18,7 @@ const App = () => {
 
         <Routes>
           <Route path="/" element={<Startpage />} />
+          <Route path="/product/:id" element={<ProductPage />} />
         </Routes>
       </Router>
     </QueryClientProvider>

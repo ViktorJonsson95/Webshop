@@ -8,7 +8,8 @@ export default function ProductPage() {
 
     if (isLoading) return <p>Loading, please wait...</p>
     //Om det blev fel ELLER om data är tom, visa felmeddelande
-    if (isError || !data ) return <p>Something went wrong! Couldn't find product.</p>
+    if (isError || !data) return <p>Something went wrong! Couldn't find product.</p>
+
 
     return (
         <div>

@@ -1,4 +1,4 @@
-// import 'dotenv/config';
+
 import express from "express";
 import cors from "cors";
 import { initializeApp, cert } from "firebase-admin/app";
@@ -12,10 +12,42 @@ initializeApp ({
 const db = getFirestore();
 const app = express();
 
+
 app.use(cors());
 app.use(express.json());
 
-const PORT = 3000;
+// Test-kod
+// app.get("/hej", (req, res) => {
+//   console.log("TERMINALEN: Någon ropar på /hej!");
+//   res.send("WEBBLÄSAREN: Nu funkar det!");
+// });
+
+// app.get("/test-firebase", async (req, res) => {
+//   try {
+//     // Vi försöker hämta din samling som heter "products"
+//     const snapshot = await db.collection("products").get();
+    
+//     // Vi gör om datan till en enkel lista
+//     const products = snapshot.docs.map(doc => ({
+//       id: doc.id,
+//       ...doc.data()
+//     }));
+
+//     res.json({
+//       message: "Firebase pratar med oss!",
+//       count: products.length,
+//       data: products
+//     });
+//   } catch (error) {
+//     res.status(500).json({ 
+//       message: "Firebase-fel!", 
+//       error: error.message 
+//     });
+//   }
+// });
+
+//Backend körs på PORT 8080 för att inte krocka med frontend
+const PORT = 8080;
 
 
 app.post("/api/addProduct", async (req, res) => {
@@ -112,6 +144,7 @@ app.get("/api/products", async (req, res) => {
 
 app.get("/api/products/:id", async (req, res) => {
     try {
+        console.log("Letar i Firebase efter ID:", req.params.id);
         const productDoc = await db
         .collection("products")
         .doc(req.params.id)
@@ -152,5 +185,5 @@ app.get("/api/orders", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log("server körs på http://localhost:3000")
+    console.log("server körs på http://localhost:8080")
 });

@@ -19,7 +19,7 @@ export default function Startpage() {
   }
 
   return (
-    <div>
+    <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
       <h1 className="border border-red-500">Webbshop</h1>
       {data.map((product) => (
         <div key={product.id}>

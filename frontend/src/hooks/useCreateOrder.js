@@ -1,5 +1,22 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { createOrder } from '../api/createOrder'
+
+const createOrder = async (order) => {
+    const res = await fetch("http://localhost:3000/api/orders", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(order),
+    })
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        throw new Error(data?.error || 'Failed to create order')
+    }
+
+    return data
+}
 
 export const useCreateOrder = () => {
     const queryClient = useQueryClient()

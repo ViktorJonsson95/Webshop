@@ -1,5 +1,22 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { createProduct } from "../api/createProduct"
+
+const createProduct = async (product) => {
+    const res = await fetch("http://localhost:3000/api/products", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(product),
+    })
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        throw new Error(data?.error || "Failed to create product")
+    }
+
+    return data;
+}
 
 export const useCreateProduct = () => {
     const queryClient = useQueryClient()

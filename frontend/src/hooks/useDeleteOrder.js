@@ -1,5 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { deleteOrder } from "../api/deleteOrder"
+
+const deleteOrder = async (id) => {
+    const res = await fetch(`http://localhost:3000/api/orders/${id}`, {
+        method: "DELETE",
+    })
+
+    if (!res.ok) {
+        throw new Error("Failed to delete order")
+    }
+}
 
 export const useDeleteOrder = () => {
     const queryClient = useQueryClient()

@@ -4,6 +4,8 @@ import { useCreateProduct } from "../hooks/useCreateProduct"
 import { useDeleteProduct } from "../hooks/useDeleteProduct"
 import { useDeleteOrder } from "../hooks/useDeleteOrder"
 import { useOrders } from "../hooks/useOrders"
+import CategorySelect from "../components/CategorySelect"
+import placeholder from "../assets/placeholder640x640.png"
 
 export default function AdminPage() {
     const { data: products, isLoading, error } = useProducts()
@@ -23,6 +25,7 @@ export default function AdminPage() {
         price: "",
         imageUrl: "",
         description: "",
+        category: "",
     })
 
     const [message, setMessage] = useState("")
@@ -33,6 +36,17 @@ export default function AdminPage() {
     const handleCreate = async (e) => {
         e.preventDefault()
         setMessage("")
+
+        if (
+            !form.name.trim() ||
+            !form.price ||
+            !form.imageUrl.trim() ||
+            !form.description.trim() ||
+            !form.category.trim()
+        ) {
+            setMessage("Alla fält måste fyllas i")
+            return
+        }
 
         try {
             await createMutation.mutateAsync({
@@ -45,6 +59,7 @@ export default function AdminPage() {
                 price: "",
                 imageUrl: "",
                 description: "",
+                category: ""
             })
 
             setMessage("Produkt skapad")
@@ -109,16 +124,35 @@ export default function AdminPage() {
                         setForm({ ...form, description: e.target.value })
                     }
                 />
+                <CategorySelect
+                    value={form.category}
+                    onChange={(value) =>
+                        setForm({ ...form, category: value })
+                    }
+                />
+                <input
+                    placeholder="Ny kategori"
+                    onBlur={(e) => {
+                        setForm({ ...form, category: e.target.value })
+                    }}
+                />
 
-                <button type="submit">Lägg till produkt</button>
+                <button className="border p-2" type="submit">Lägg till produkt</button>
             </form>
 
             <div className="flex flex-col gap-2">
                 {products.map((p) => (
                     <div key={p.id} className=" flex justify-between border p-2">
-                        <img src={p.imageUrl} alt={p.name} />
+                        <img className="size w-40 h-40"
+                            src={p.imageUrl && p.imageUrl.trim() !== "" ? p.imageUrl : placeholder}
+                            alt={p.name}
+                            onError={(e) => {
+                                e.currentTarget.src = placeholder
+                            }}
+                        />
                         <p>{p.name} – {p.price} kr</p>
                         <p>{p.description}</p>
+                        <p className="color text-blue-800">{p.category}</p>
                         <button className="border p-2" onClick={() => handleDelete(p.id)}>
                             Ta bort
                         </button>

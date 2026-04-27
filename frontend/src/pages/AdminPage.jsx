@@ -82,6 +82,7 @@ export default function AdminPage() {
     const handleDeleteOrder = async (id) => {
         try {
             await deleteOrderMutation.mutateAsync(id)
+            setMessage("Ordern borttagen")
         } catch (err) {
             setMessage(err.message)
         }

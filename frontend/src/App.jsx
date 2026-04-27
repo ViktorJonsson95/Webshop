@@ -1,10 +1,11 @@
 import "./App.css"
-import Startpage from "./components/Startpage"
+import Startpage from "./pages/Startpage"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
 import TestShop from "./dev/TestShop"
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom"
-import ProductPage from './components/ProductPage';
 import CheckoutPage from "./components/CheckoutPage"
+import ProductPage from './pages/ProductPage';
+import AdminPage from "./pages/AdminPage"
 
 const queryClient = new QueryClient()
 
@@ -21,6 +22,7 @@ const App = () => {
           <Route path="/" element={<Startpage />} />
           <Route path="/product/:id" element={<ProductPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/admin" element={<AdminPage />} />
         </Routes>
       </Router>
     </QueryClientProvider>

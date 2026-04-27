@@ -3,7 +3,7 @@ import Startpage from "./pages/Startpage"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
 import TestShop from "./dev/TestShop"
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom"
-import CheckoutPage from "./components/CheckoutPage"
+import CheckoutPage from "./pages/CheckoutPage"
 import ProductPage from './pages/ProductPage';
 import AdminPage from "./pages/AdminPage"
 

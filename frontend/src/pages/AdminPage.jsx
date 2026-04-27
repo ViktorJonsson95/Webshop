@@ -133,7 +133,8 @@ export default function AdminPage() {
                 />
                 <input
                     placeholder="Ny kategori"
-                    onBlur={(e) => {
+                    value={form.category}
+                    onChange={(e) => {
                         setForm({ ...form, category: e.target.value })
                     }}
                 />

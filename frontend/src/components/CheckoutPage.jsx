@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {useCreateOrder} from "../hooks/useCreateOrder"
+import { getProducts } from "../api/getProducts";
 
 
 export default function CheckoutPage() {
@@ -44,7 +45,7 @@ export default function CheckoutPage() {
 
         const order = {
             customer: form,
-            items: cartItems,
+            products: cartItems,
             total: total
         }
 
@@ -61,18 +62,18 @@ export default function CheckoutPage() {
 
 
     return (
-        <div className="p-6">
+        <div className=" flex flex-col p-6">
 
-            <div className="grid grid-cols-1 md:grid-cols-2">
-                <section>
+            <div className="flex flex-col md:flex-row md:justify-around md:gap-16 items-start">
+                <section className="w-full md:w-auto">
                     <h1>Orderöversikt</h1>
 
                     {cartItems.length === 0 ? (
                         <p>Din kundvagn är tom</p>
                     ) : (
-                        <div className="flex flex-col gap-4 text-left">
+                        <div className="flex flex-col gap-4 text-left w-full">
                             {cartItems.map(item => (
-                                <div key={item.id} className="flex flex-col border-1 border-black p-3">
+                                <div key={item.id} className="w-full flex flex-col border border-black p-3">
                                  <p>{item.name}</p>
                                  <p className="flex justify-between">
                                     <span>
@@ -90,10 +91,11 @@ export default function CheckoutPage() {
                     )}
                 </section>
 
-                <section className="flex flex-col gap-5 border-2 border-blue-500 p-4 rounded">
-                    <h2>Dina uppgifter</h2>
+                <section className="flex-1 flex-col gap-8 border-2 border-blue-500 p-4 rounded mt-5">
+                    <h2 className="m-8 min-w-11/12">Dina uppgifter</h2>
                     
                     <input 
+                        className="m-8 min-w-11/12 border-2 border-blue-500"
                         type="text"
                         placeholder="NAMN:"
                         value={form.name}
@@ -101,6 +103,7 @@ export default function CheckoutPage() {
                     />
 
                     <input 
+                        className="m-8 min-w-11/12 border-2 border-blue-500"
                         type="text"
                         placeholder="E-MAIL:"
                         value={form.email}
@@ -108,6 +111,7 @@ export default function CheckoutPage() {
                     />
 
                     <input 
+                        className="m-8 min-w-11/12 border-2 border-blue-500"
                         type="text"
                         placeholder="ADDRESS:"
                         value={form.address}
@@ -120,7 +124,7 @@ export default function CheckoutPage() {
             <button 
                 onClick={handleOrder} 
                 disabled={isLoading}
-                className="bg-blue-400 text-white px-8 py-3 font-semibold"
+                className="bg-blue-400 text-white px-8 py-3 font-semibold mx-auto mt-7 md:mt-15"
             >
                 {isLoading ? "Skickar order..." : `Slutför order på ${total} kr`}
             </button>

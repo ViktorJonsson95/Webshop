@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+/* Dölj scrollbar men behåll scroll */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  /* IE/Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
 :root {
   --text: #38185e;
   --text-h: #08060d;

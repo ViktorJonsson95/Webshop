@@ -174,6 +174,29 @@ app.delete("/api/products/:id", async (req, res) => {
     }
 })
 
+app.put("/api/products/:id", async (req, res) => {
+    try {
+        const docRef = db.collection("products").doc(req.params.id);
+        const doc = await docRef.get();
+
+        if (!doc.exists) {
+            return res.status(404).json({
+                error: "Produkten finns inte",
+            });
+        }
+
+        await docRef.update(req.body);
+
+        res.json({
+            message: "Produkt uppdaterad",
+        });
+    } catch {
+        res.status(500).json({
+            error: "Serverfel vid uppdatering",
+        });
+    }
+});
+
 app.delete("/api/orders/:id", async (req, res) => {
     try {
         const docRef = db.collection("orders").doc(req.params.id)

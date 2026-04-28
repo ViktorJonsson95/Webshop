@@ -1,26 +1,32 @@
 import { useState, useEffect } from 'react';
 
-export default function ShoppingCart({ cartItems }) {
-    
+export default function ShoppingCart() {
     const [cartItems, setCartItems] = useState([]);
-    // Visar produkterna i kundvagnen om det finns några, annars en tom lista
-    const itemsToShow = cartItems || [];
 
-    // Räknar ut summan för produkterna i shopping cart
-    const total = itemsToShow.reduce((sum, product) => {
-        return sum + (product.price * (product.quantity || 1))
+    useEffect(() => {
+        const rawCart = localStorage.getItem("cart");
+        
+        if (rawCart) {
+            setCartItems(JSON.parse(rawCart));
+        }
+    }, []); // Hämtar bara från localStorage EN gång när sidan laddas
+
+    // Uträkning för produkter i cart
+    // Körs varjre gång efter cartItems ändras
+    const total = cartItems.reduce((sum, product) => {
+        return sum + (product.price * (product.quantity || 1));
     }, 0);
 
     return (
         <div className="shopping-cart">
-            <h2>Kundvagn</h2>
+            <h2>Din varukorg</h2>
 
-            {itemsToShow.length === 0 ? (
+            {cartItems.length === 0 ? (
                 <p>Kundvagnen är tom</p>
             ) : (
                     <>
                     <ul>
-                        {itemsToShow.map((product) => (
+                        {cartItems.map((product) => (
                             <li key={product.id}>
                                 {product.name} - {product.price} kr
                             </li>

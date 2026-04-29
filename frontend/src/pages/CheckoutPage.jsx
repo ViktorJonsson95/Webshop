@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import {useCreateOrder} from "../hooks/useCreateOrder"
+import ShoppingCart from "../components/ShoppingCart";
 
 
 export default function CheckoutPage() {
-    const {mutate, isLoading, isError} = useCreateOrder();
+    const {mutate, isLoading, error} = useCreateOrder();
 
     const [orderSuccess, setOrderSuccess] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
@@ -60,27 +61,8 @@ export default function CheckoutPage() {
                 <section className="md:w-auto ml-3">
                         <h1>Orderöversikt</h1>
 
-                        {cartItems.length === 0 ? (
-                            <p>Din kundvagn är tom</p>
-                        ) : (
-                            <div className="flex flex-col gap-2 text-left w-full">
-                                {cartItems.map(item => (
-                                    <div key={item.id} className="w-full flex flex-col p-3">
-                                    <p>{item.name}</p>
-                                    <p className="flex justify-between">
-                                        <span>
-                                            {item.quantity}st
-                                        </span> 
-                                        <span>
-                                            {item.price}:-
-                                        </span>
-                                    </p>
-                                </div>
-                            ))}
-
-                            <h2>Total: {total} :-</h2>
-                            </div>
-                        )}
+                            <ShoppingCart/>
+                    
                 </section>
 
                 <section className="flex flex-1 flex-col m-12 gap-6 items-center border-2 border-gray-300 p-8 rounded-xl mt-5 bg-white shadow-md">
@@ -131,7 +113,7 @@ export default function CheckoutPage() {
                 {isLoading ? "Skickar order..." : `Slutför order på ${total} kr`}
             </button>
 
-            {isError && <p>Något gick fel!</p>}
+            {error && <p>Något gick fel!</p>}
         </div>
     )
 }

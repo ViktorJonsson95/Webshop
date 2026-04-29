@@ -17,26 +17,14 @@ export default function Navbar() {
           </h1>
         </Link>
 
-        <button onClick={() => setCartOpen(true)}>🛒</button>
+        <button onClick={() => setCartOpen(true)}>
+          <FaShoppingCart />
+        </button>
 
         <Modal open={cartOpen} onClose={() => setCartOpen(false)}>
           <ShoppingCart />
         </Modal>
       </div>
-
-      {menuOpen && (
-        <div className="md:hidden bg-slate-900 px-6 pb-6 pt-2">
-          <p className="text-slate-300">Meny</p>
-          <Link
-            to="/kundvagn"
-            className="flex items-center text-slate-300 mt-2"
-          >
-            <FaShoppingCart className="mr-2" />
-            Kundvagn
-          </Link>
-          <FaShoppingCart />
-        </div>
-      )}
     </header>
   )
 }

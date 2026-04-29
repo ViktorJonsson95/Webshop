@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Link } from "react-router-dom"
 import { FaShoppingCart } from "react-icons/fa"
 import Modal from "./Modal"
-import ShoppingCart from "../pages/ShoppingCart"
+import ShoppingCart from "./ShoppingCart"
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)

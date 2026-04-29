@@ -31,7 +31,7 @@ export default function ShoppingCart() {
         setCartItems(updatedCart);
 
         // 3. Spara den nya listan i webbläsarens minne
-        localStorage.setItem("cart", JSON.stringif(updatedCart));
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
     };
 
 

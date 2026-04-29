@@ -14,22 +14,11 @@ export default function CheckoutPage() {
         address:""
     })
 
-    // Hämta cart + fixa quantity
+    // Hämta cart
     useEffect(() => {
-        const rawCart = JSON.parse(localStorage.getItem("cart")) || []
+        const cart = JSON.parse(localStorage.getItem("cart")) || []
 
-        const grouped = Object.values(
-            rawCart.reduce((acc, item) => {
-                if(!acc[item.id]) {
-                    acc[item.id] = {...item, quantity:1}
-                } else {
-                    acc[item.id].quantity += 1
-                }
-                return acc
-            }, {})
-        )
-
-        setCartItems(grouped)
+        setCartItems(cart)
     }, [])
 
     // Total i checkout

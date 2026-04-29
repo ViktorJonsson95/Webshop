@@ -28,8 +28,11 @@ export default function Startpage() {
             <p>{product.price} kr</p>
             <img src={product.imageUrl} alt={product.name} />
           </Link>
-
-          <button onClick={() => addToCart(product)}>
+          
+          <button
+            onClick={() => addToCart(product)}
+            style={{ cursor: 'pointer' }}
+          >
             Lägg till i kundvagn
           </button>
         </div>

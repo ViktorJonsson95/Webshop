@@ -4,14 +4,20 @@ import { useCreateProduct } from "../hooks/useCreateProduct"
 import { useDeleteProduct } from "../hooks/useDeleteProduct"
 import { useDeleteOrder } from "../hooks/useDeleteOrder"
 import { useOrders } from "../hooks/useOrders"
-import CategorySelect from "../components/CategorySelect"
+import { useCategories } from "../hooks/useCategories"
 import placeholder from "../assets/placeholder640x640.png"
+import { useUpdateProduct } from "../hooks/useUpdateProduct"
+
+
 
 export default function AdminPage() {
     const { data: products, isLoading, error } = useProducts()
+    const [editingProduct, setEditingProduct] = useState(null)
     const createMutation = useCreateProduct()
     const deleteMutation = useDeleteProduct()
     const deleteOrderMutation = useDeleteOrder()
+    const { categories } = useCategories()
+    const updateMutation = useUpdateProduct()
 
 
     const {
@@ -26,6 +32,7 @@ export default function AdminPage() {
         imageUrl: "",
         description: "",
         category: "",
+        tags: ""
     })
 
     const [message, setMessage] = useState("")
@@ -33,7 +40,7 @@ export default function AdminPage() {
     if (isLoading) return <p>Laddar...</p>
     if (error) return <p>Fel: {error.message}</p>
 
-    const handleCreate = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         setMessage("")
 
@@ -49,20 +56,36 @@ export default function AdminPage() {
         }
 
         try {
-            await createMutation.mutateAsync({
+            const payload = {
                 ...form,
                 price: Number(form.price),
-            })
+                tags: form.tags
+                    .split(",")
+                    .map((t) => t.trim())
+                    .filter(Boolean),
+            }
+
+            if (editingProduct) {
+                await updateMutation.mutateAsync({
+                    id: editingProduct.id,
+                    data: payload,
+                })
+                setMessage("Produkt uppdaterad")
+            } else {
+                await createMutation.mutateAsync(payload)
+                setMessage("Produkt skapad")
+            }
 
             setForm({
                 name: "",
                 price: "",
                 imageUrl: "",
                 description: "",
-                category: ""
+                category: "",
+                tags: "",
             })
 
-            setMessage("Produkt skapad")
+            setEditingProduct(null)
         } catch (err) {
             setMessage(err.message)
         }
@@ -95,7 +118,7 @@ export default function AdminPage() {
 
             {message && <p>{message}</p>}
 
-            <form onSubmit={handleCreate} className="flex flex-col gap-2 mb-6">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-2 mb-6">
                 <input
                     placeholder="Namn"
                     value={form.name}
@@ -125,12 +148,19 @@ export default function AdminPage() {
                         setForm({ ...form, description: e.target.value })
                     }
                 />
-                <CategorySelect
+                <select
                     value={form.category}
-                    onChange={(value) =>
-                        setForm({ ...form, category: value })
+                    onChange={(e) =>
+                        setForm({ ...form, category: e.target.value })
                     }
-                />
+                >
+                    <option value="">Välj kategori</option>
+                    {categories.map((cat) => (
+                        <option key={cat} value={cat}>
+                            {cat}
+                        </option>
+                    ))}
+                </select>
                 <input
                     placeholder="Ny kategori"
                     value={form.category}
@@ -138,8 +168,17 @@ export default function AdminPage() {
                         setForm({ ...form, category: e.target.value })
                     }}
                 />
+                <input
+                    placeholder="Taggar (comma separated)"
+                    value={form.tags}
+                    onChange={(e) =>
+                        setForm({ ...form, tags: e.target.value })
+                    }
+                />
 
-                <button className="border p-2" type="submit">Lägg till produkt</button>
+                <button className="border p-2" type="submit">
+                    {editingProduct ? "Uppdatera produkt" : "Lägg till produkt"}
+                </button>
             </form>
 
             <div className="flex flex-col gap-2">
@@ -157,6 +196,15 @@ export default function AdminPage() {
                         <p className="color text-blue-800">{p.category}</p>
                         <button className="border p-2" onClick={() => handleDelete(p.id)}>
                             Ta bort
+                        </button>
+                        <button onClick={() => {
+                            setEditingProduct(p)
+                            setForm({
+                                ...p,
+                                tags: p.tags?.join(", ") || ""
+                            })
+                        }}>
+                            Redigera
                         </button>
                     </div>
                 ))}

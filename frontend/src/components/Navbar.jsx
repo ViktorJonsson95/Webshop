@@ -9,10 +9,10 @@ export default function Navbar() {
   const [cartOpen, setCartOpen] = useState(false)
 
   return (
-    <header className="bg-slate-950 text-white border-b border-slate-800">
+    <header className="bg-blue-100 text-black border-b border-slate-800">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link to="/">
-          <h1 className="text-2xl font-bold tracking-wider text-cyan-400 bg-blue-400">
+          <h1 className="text-2xl font-bold tracking-wider">
             Runova
           </h1>
         </Link>

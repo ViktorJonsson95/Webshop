@@ -5,7 +5,7 @@ export default function ShoppingCart() {
 
     useEffect(() => {
         const rawCart = localStorage.getItem("cart");
-        
+
         if (rawCart) {
             setCartItems(JSON.parse(rawCart));
         }
@@ -19,12 +19,12 @@ export default function ShoppingCart() {
 
     return (
         <div className="shopping-cart">
-            <h2>Din varukorg</h2>
+            <h2 className='text-white'>Din varukorg</h2>
 
             {cartItems.length === 0 ? (
                 <p>Kundvagnen är tom</p>
             ) : (
-                    <>
+                <>
                     <ul>
                         {cartItems.map((product) => (
                             <li key={product.id}>
@@ -35,9 +35,9 @@ export default function ShoppingCart() {
 
                     <div className="cart-total">
                         <hr />
-                            <p><strong>Totalpris: {total} kr</strong></p>
-                        </div>
-                    </>
+                        <p><strong>Totalpris: {total} kr</strong></p>
+                    </div>
+                </>
             )}
         </div>
     );

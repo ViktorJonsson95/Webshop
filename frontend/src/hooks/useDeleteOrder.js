@@ -5,9 +5,13 @@ const deleteOrder = async (id) => {
         method: "DELETE",
     })
 
+    const data = await res.json();
+
     if (!res.ok) {
-        throw new Error("Failed to delete order")
+        throw new Error(data?.error || "Failed to delete order")
     }
+
+    return data
 }
 
 export const useDeleteOrder = () => {

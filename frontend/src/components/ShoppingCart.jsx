@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { FaPlus, FaMinus, FaTrashAlt } from 'react-icons/fa';
 
 export default function ShoppingCart() {
     const [cartItems, setCartItems] = useState([]);
@@ -52,7 +53,7 @@ export default function ShoppingCart() {
 
     return (
         <div className="shopping-cart">
-            <h2>Kundvagn</h2>
+            <h2 className='text-white'>Din varukorg</h2>
 
             {cartItems.length === 0 ? (
                 <p>Kundvagnen är tom</p>
@@ -63,11 +64,17 @@ export default function ShoppingCart() {
                             <li key={product.id}>
                                 {`${product.name} - ${product.price} kr (${product.quantity || 1} st)`}
 
-                                <button onClick={() => increaseQuantity(product.id)} style={{ cursor: 'pointer', padding: '10px' }}> + </button>
+                                <button onClick={() => increaseQuantity(product.id)} style={{ cursor: 'pointer', padding: '10px' }}>
+                                    <FaPlus />
+                                </button>
 
-                                <button onClick={() => decreaseQuantity(product.id)} style={{ cursor: 'pointer', padding: '10px' }}> - </button>
+                                <button onClick={() => decreaseQuantity(product.id)} style={{ cursor: 'pointer', padding: '10px' }}>
+                                    <FaMinus />
+                                </button>
 
-                                <button onClick={() => removeFromCart(product.id)} style={{ cursor: 'pointer' }}>Ta bort</button>
+                                <button onClick={() => removeFromCart(product.id)} style={{ cursor: 'pointer', padding: '10px' }}>
+                                    <FaTrashAlt />
+                                </button>
                             </li>
                         ))}
                     </ul>

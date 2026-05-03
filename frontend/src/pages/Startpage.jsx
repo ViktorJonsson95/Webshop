@@ -164,7 +164,7 @@ export default function Startpage() {
             </Link>
 
             <button
-              className="border mt-2 p-1"
+              className="border mt-2 p-1 cursor-pointer"
               onClick={() => addToCart(product)}
             >
               Lägg till i kundvagn

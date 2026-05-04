@@ -3,30 +3,40 @@ import { useProducts } from "../hooks/useProducts"
 import { Link, useSearchParams } from "react-router-dom"
 import { useCategories } from "../hooks/useCategories"
 
-const addToCart = (product) => {
-  const existingCart = JSON.parse(localStorage.getItem("cart")) || []
 
-  const existingItem = existingCart.find(item => item.id === product.id)
-
-  let updatedCart 
-
-  if(existingItem) {
-    updatedCart = existingCart.map(item => 
-      item.id === product.id ? {...item, quantity: item.quantity + 1}
-      : item
-    )
-  } else {
-    updatedCart = [...existingCart, {...product, quantity: 1}]
-  }
-  
-  localStorage.setItem("cart", JSON.stringify(updatedCart))
-}
 
 export default function Startpage() {
   const { data, isLoading, error } = useProducts()
   const [searchParams, setSearchParams] = useSearchParams()
   const { categories } = useCategories()
   const [sort, setSort] = useState("")
+  const [added, setAdded] = useState(false)
+
+  const addToCart = (product) => {
+    const existingCart = JSON.parse(localStorage.getItem("cart")) || []
+
+    const existingItem = existingCart.find(item => item.id === product.id)
+
+    let updatedCart
+
+    if (existingItem) {
+      updatedCart = existingCart.map(item =>
+        item.id === product.id ? { ...item, quantity: item.quantity + 1 }
+          : item
+      )
+    } else {
+      updatedCart = [...existingCart, { ...product, quantity: 1 }]
+    }
+
+    localStorage.setItem("cart", JSON.stringify(updatedCart))
+
+    // Lagt till produkt i kundvagnen
+    setAdded(true)
+
+    setTimeout(() => {
+      setAdded(false)
+    }, 2500)
+  }
 
   const activeCategory = searchParams.get("category") || ""
   const activeTag = searchParams.get("tag") || ""
@@ -151,8 +161,6 @@ export default function Startpage() {
         {sortedProducts.map((product) => (
           <div key={product.id} className="border p-2">
             <Link to={`/product/${product.id}`}>
-              <h3>{product.name}</h3>
-              <p>{product.price} kr</p>
               <img
                 src={
                   product.imageUrl && product.imageUrl.trim() !== ""
@@ -161,14 +169,21 @@ export default function Startpage() {
                 }
                 alt={product.name}
               />
+              <h3>{product.name}</h3>
+              <p>{product.price} kr</p>
             </Link>
 
             <button
-              className="border mt-2 p-1"
+              className="border mt-2 p-1 cursor-pointer"
               onClick={() => addToCart(product)}
             >
               Lägg till i kundvagn
             </button>
+            {added && (
+              <span className="">
+                Tillagd i Kundvagnen
+              </span>
+            )}
           </div>
         ))}
       </div>

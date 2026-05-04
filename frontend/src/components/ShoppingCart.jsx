@@ -1,20 +1,54 @@
+import useCart from '../hooks/useCart';
+import { useQueryClient } from '@tanstack/react-query'
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { FaPlus, FaMinus, FaTrashAlt } from 'react-icons/fa';
 
-export default function ShoppingCart() {
-    const [cartItems, setCartItems] = useState([]);
+export default function ShoppingCart({ showCheckoutButton = true }) {
+    const { data: cartItems = [] } = useCart()
+    const queryClient = useQueryClient()
 
-    useEffect(() => {
-        const rawCart = localStorage.getItem("cart");
 
-        if (rawCart) {
-            setCartItems(JSON.parse(rawCart));
-        }
-    }, []); // Hämtar bara från localStorage EN gång när sidan laddas
+    // Öka antalet produkter
+    const increaseQuantity = (id) => {
+        const updatedCart = cartItems.map(product =>
+            product.id === id ? { ...product, quantity: (product.quantity ?? 1) + 1 }
+                : product
+        );
+        localStorage.setItem("cart", JSON.stringify(updatedCart))
+        queryClient.setQueryData(["cart"], updatedCart)
+    };
 
-    // Uträkning för produkter i cart
-    // Körs varjre gång efter cartItems ändras
-    const total = cartItems.reduce((sum, product) => {
-        return sum + (product.price * (product.quantity || 1));
+
+    const decreaseQuantity = (id) => {
+        const updatedCart = cartItems.map(product => {
+            if (product.id !== id) return product
+
+            const current = product.quantity ?? 1
+            const newQuantity = Math.max(1, current - 1)
+
+            return { ...product, quantity: newQuantity }
+        })
+        localStorage.setItem("cart", JSON.stringify(updatedCart))
+        queryClient.setQueryData(["cart"], updatedCart)
+    }
+
+    const removeFromCart = (id) => {
+        const updatedCart = cartItems.filter(product => product.id !== id)
+        localStorage.setItem("cart", JSON.stringify(updatedCart))
+        queryClient.setQueryData(["cart"], updatedCart)
+    }
+
+    // --- TOTALSUMMA OCH CHECKOUT
+
+    // Beräkna totalsumma (med fallback till 1 för quantity)
+    const total = cartItems.reduce((acc, product) => {
+        return acc + (product.price * (product.quantity || 1));
+    }, 0);
+
+    // Beräkna totalt antal artiklar
+    const totalQuantity = cartItems.reduce((acc, product) => {
+        return acc + (product.quantity || 1);
     }, 0);
 
     return (
@@ -28,14 +62,32 @@ export default function ShoppingCart() {
                     <ul>
                         {cartItems.map((product) => (
                             <li key={product.id}>
-                                {product.name} - {product.price} kr
+                                {`${product.name} - ${product.price} kr (${product.quantity || 1} st)`}
+
+                                <button onClick={() => increaseQuantity(product.id)} style={{ cursor: 'pointer', padding: '10px' }}>
+                                    <FaPlus />
+                                </button>
+
+                                <button onClick={() => decreaseQuantity(product.id)} style={{ cursor: 'pointer', padding: '10px' }}>
+                                    <FaMinus />
+                                </button>
+
+                                <button onClick={() => removeFromCart(product.id)} style={{ cursor: 'pointer', padding: '10px' }}>
+                                    <FaTrashAlt />
+                                </button>
                             </li>
                         ))}
                     </ul>
 
                     <div className="cart-total">
                         <hr />
-                        <p><strong>Totalpris: {total} kr</strong></p>
+                        <p>{`Totalpris: ${total} kr`}</p>
+                        <p>{`Totalt antal artiklar: ${totalQuantity} st`}</p>
+                        {showCheckoutButton && (<Link to="/checkout">
+                            <button style={{ cursor: 'pointer', padding: '10px', width: '100%' }}>
+                                Gå till kassan
+                            </button>
+                        </Link>)}
                     </div>
                 </>
             )}

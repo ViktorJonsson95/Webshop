@@ -1,12 +1,18 @@
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 import { FaShoppingCart } from "react-icons/fa"
 import Modal from "./Modal"
 import ShoppingCart from "./ShoppingCart"
+import { useEffect } from "react"
 
 export default function Navbar() {
-  const [menuOpen, setMenuOpen] = useState(false)
+  const location = useLocation()
   const [cartOpen, setCartOpen] = useState(false)
+  const isCheckout = location.pathname === "/checkout"
+
+  useEffect(() => {
+    setCartOpen(false)
+  }, [location.pathname])
 
   return (
     <header className="bg-blue-100 text-black border-b border-slate-800">
@@ -17,9 +23,10 @@ export default function Navbar() {
           </h1>
         </Link>
 
-        <button onClick={() => setCartOpen(true)}>
+        {!isCheckout && (<button onClick={() => setCartOpen(true)}>
           <FaShoppingCart />
-        </button>
+        </button>)}
+
 
         <Modal open={cartOpen} onClose={() => setCartOpen(false)}>
           <ShoppingCart />

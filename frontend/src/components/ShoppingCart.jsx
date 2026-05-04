@@ -1,48 +1,48 @@
+import useCart from '../hooks/useCart';
+import { useQueryClient } from '@tanstack/react-query'
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaPlus, FaMinus, FaTrashAlt } from 'react-icons/fa';
 
-export default function ShoppingCart() {
-    const [cartItems, setCartItems] = useState([]);
+export default function ShoppingCart({ showCheckoutButton = true }) {
+    const { data: cartItems = [] } = useCart()
+    const queryClient = useQueryClient()
 
-    // Hämta sparade produkter från localStorage vid första laddning
-    useEffect(() => {
-        const cart = localStorage.getItem("cart");
-        if (cart) {
-            setCartItems(JSON.parse(cart));
-        }
-    }, []); 
 
     // Öka antalet produkter
     const increaseQuantity = (id) => {
         const updatedCart = cartItems.map(product =>
-            product.id === id ? { ...product, quantity: (product.quantity || 1) + 1 } : product
+            product.id === id ? { ...product, quantity: (product.quantity ?? 1) + 1 }
+                : product
         );
-        setCartItems(updatedCart);
-        localStorage.setItem("cart", JSON.stringify(updatedCart));
+        localStorage.setItem("cart", JSON.stringify(updatedCart))
+        queryClient.setQueryData(["cart"], updatedCart)
     };
 
-    // Minska antalet produkter
+
     const decreaseQuantity = (id) => {
-        const updatedCart = cartItems.map(product =>
-            product.id === id ? { ...product, quantity: (product.quantity || 1) - 1 } : product
-        );
-        setCartItems(updatedCart);
-        localStorage.setItem("cart", JSON.stringify(updatedCart));
-    };
+        const updatedCart = cartItems.map(product => {
+            if (product.id !== id) return product
 
-    // Ta bort produkten från kundvagnen
+            const current = product.quantity ?? 1
+            const newQuantity = Math.max(1, current - 1)
+
+            return { ...product, quantity: newQuantity }
+        })
+        localStorage.setItem("cart", JSON.stringify(updatedCart))
+        queryClient.setQueryData(["cart"], updatedCart)
+    }
+
     const removeFromCart = (id) => {
-        const updatedCart = cartItems.filter(product => product.id !== id); 
-        setCartItems(updatedCart);   // Uppdatera state 
-        localStorage.setItem("cart", JSON.stringify(updatedCart));  // Spara den nya listan 
-    };
-
+        const updatedCart = cartItems.filter(product => product.id !== id)
+        localStorage.setItem("cart", JSON.stringify(updatedCart))
+        queryClient.setQueryData(["cart"], updatedCart)
+    }
 
     // --- TOTALSUMMA OCH CHECKOUT
 
     // Beräkna totalsumma (med fallback till 1 för quantity)
-    const total = cartItems.reduce((acc, product) => {  
+    const total = cartItems.reduce((acc, product) => {
         return acc + (product.price * (product.quantity || 1));
     }, 0);
 
@@ -83,11 +83,11 @@ export default function ShoppingCart() {
                         <hr />
                         <p>{`Totalpris: ${total} kr`}</p>
                         <p>{`Totalt antal artiklar: ${totalQuantity} st`}</p>
-                        <Link to="/checkout">
-                            <button style={{ cursor: 'pointer', padding: '10px', width: '100%' }}>   
-                            Gå till kassan
+                        {showCheckoutButton && (<Link to="/checkout">
+                            <button style={{ cursor: 'pointer', padding: '10px', width: '100%' }}>
+                                Gå till kassan
                             </button>
-                        </Link>
+                        </Link>)}
                     </div>
                 </>
             )}

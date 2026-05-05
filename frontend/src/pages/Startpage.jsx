@@ -194,8 +194,8 @@ export default function Startpage() {
             </Link>
 
             <button
-              className="border mt-2 p-1 cursor-pointer bg-slate-700 text-white px-8 py-3 font-semibold mx-auto rounded transition-all duration-200 
-                hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
+              className="border mt-2 p-1 cursor-pointer bg-green-600 text-white px-8 py-3 font-semibold mx-auto rounded transition-all duration-200 
+                hover:bg-green-700 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
               onClick={() => addToCart(product)}
             >
               Lägg till i kundvagn

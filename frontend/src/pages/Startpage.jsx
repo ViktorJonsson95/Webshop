@@ -2,7 +2,7 @@ import { useState } from "react"
 import { useProducts } from "../hooks/useProducts"
 import { Link, useSearchParams } from "react-router-dom"
 import { useCategories } from "../hooks/useCategories"
-
+import { useQueryClient } from "@tanstack/react-query"
 
 
 export default function Startpage() {
@@ -11,6 +11,7 @@ export default function Startpage() {
   const { categories } = useCategories()
   const [sort, setSort] = useState("")
   const [added, setAdded] = useState(false)
+  const queryClient = useQueryClient()
 
   const addToCart = (product) => {
     const existingCart = JSON.parse(localStorage.getItem("cart")) || []
@@ -29,6 +30,7 @@ export default function Startpage() {
     }
 
     localStorage.setItem("cart", JSON.stringify(updatedCart))
+    queryClient.setQueryData(["cart"], updatedCart)
 
     // Lagt till produkt i kundvagnen
     setAdded(true)
@@ -97,9 +99,8 @@ export default function Startpage() {
   }
 
   return (
-    <div className="p-4">
-
-      <div className="flex gap-4 overflow-x-auto no-scrollbar">
+    <div >
+      <div className="sticky top-16 z-40 bg-white flex gap-4 overflow-x-auto no-scrollbar p-2">
         <button
           className={`p-2 ${!activeCategory
             ? "bg-blue-200 font-bold"

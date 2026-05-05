@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useCreateOrder } from "../hooks/useCreateOrder"
 import ShoppingCart from "../components/ShoppingCart";
 import useCart from "../hooks/useCart";
+import { useQueryClient } from "@tanstack/react-query"
 
 
 export default function CheckoutPage() {
@@ -10,6 +11,7 @@ export default function CheckoutPage() {
     const [orderSuccess, setOrderSuccess] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const { data: cartItems = [] } = useCart()
+    const queryClient = useQueryClient()
 
     const [form, setForm] = useState({
         name: "",
@@ -38,8 +40,8 @@ export default function CheckoutPage() {
         mutate(order, {
             onSuccess: () => {
                 localStorage.removeItem("cart")
+                queryClient.setQueryData(["cart"], [])
                 setOrderSuccess(true)
-                setCartItems([])
                 setErrorMessage("")
             },
             onError: (error) => {

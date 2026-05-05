@@ -40,7 +40,7 @@ export default function CheckoutPage() {
         mutate(order, {
             onSuccess: () => {
                 localStorage.removeItem("cart")
-                queryClient.setQueryData(["cart"], [])
+                queryClient.invalidateQueries(["cart"])
                 setOrderSuccess(true)
                 setErrorMessage("")
             },

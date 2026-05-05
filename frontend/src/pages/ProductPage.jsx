@@ -48,18 +48,26 @@ export default function ProductPage() {
 
     return (
         <div className='flex flex-col justify-center'>
-            <h1>Product Page</h1>
+            <h1 className="text-2xl text-slate-800 mt-4 font-bold">
+                {data.name}
+            </h1>
             <img
-                className='w-2/4'
+                className="w-full max-w-md mx-auto block mt-4"
                 src={
                     data.imageUrl && data.imageUrl.trim() !== ""
                         ? data.imageUrl
                         : "/placeholder640x640.png"
                 }
-                alt={data.name}></img>
-            <h2>{data.name}</h2>
-            <p>{data.price}</p>
-            <p>{data.description}</p>
+                alt={data.name}>
+            </img>
+
+            <p className="mt-4 text-2xl font-bold text-slate-800">
+                {data.price} kr
+            </p>
+
+            <p className="mt-3 max-w-md mx-auto text-center text-slate-600 leading-relaxed">
+                {data.description}
+            </p>
 
             <button
                 onClick={handleAddToCart}

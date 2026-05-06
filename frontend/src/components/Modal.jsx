@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 
 export default function Modal({ open, onClose, children }) {
-  // ESC ska stänga
+  // ESC stänger
   useEffect(() => {
     const handleEsc = (e) => e.key === "Escape" && onClose()
     if (open) window.addEventListener("keydown", handleEsc)
@@ -12,18 +12,21 @@ export default function Modal({ open, onClose, children }) {
 
   return (
     <div className="fixed inset-0 z-50">
+      {/* Overlay */}
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
         onClick={onClose}
       />
 
+      {/* Drawer */}
       <div
-        className="absolute right-0 top-0 h-full w-80 bg-slate-900 text-white p-6 shadow-xl"
+        className="absolute right-0 top-0 h-full w-full max-w-sm bg-blue-100 text-slate-900 p-4 shadow-xl overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <button onClick={onClose} className="mb-4">
+        <button onClick={onClose} className="mb-4 text-lg">
           ✕
         </button>
+
         {children}
       </div>
     </div>

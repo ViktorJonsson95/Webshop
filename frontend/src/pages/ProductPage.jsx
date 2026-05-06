@@ -47,42 +47,50 @@ export default function ProductPage() {
     }
 
     return (
-        <div className='max-w-3xl mx-auto px-4 py-8 text-center'>
-            <h1 className="text-2xl text-slate-800 mt-4 font-bold">
+        <div className="max-w-3xl mx-auto px-4 py-6">
+
+            {/* Produktnamn */}
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-800 text-center">
                 {data.name}
             </h1>
+
+            {/* Bild */}
             <img
-                className="w-full max-w-md mx-auto block"
+                className="w-full max-w-sm sm:max-w-md mx-auto mt-4 object-contain"
                 src={
                     data.imageUrl && data.imageUrl.trim() !== ""
                         ? data.imageUrl
                         : "/placeholder640x640.png"
                 }
-                alt={data.name}>
-            </img>
+                alt={data.name}
+            />
 
-            <p className="mt-8 text-3xl font-bold text-slate-800">
+            {/* Pris */}
+            <p className="mt-6 text-2xl sm:text-3xl font-bold text-slate-800 text-center">
                 {data.price} kr
             </p>
 
-            <p className="mt-3 max-w-md mx-auto text-center text-slate-600 leading-loose">
+            {/* Beskrivning */}
+            <p className="mt-4 text-sm sm:text-base text-slate-600 leading-relaxed text-center max-w-md mx-auto">
                 {data.description}
             </p>
 
-            <button
-                onClick={handleAddToCart}
-                className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 font-semibold mt-6 rounded transition inline-block"
-            >
-                Lägg till i kundvagn
-            </button>
+            {/* CTA */}
+            <div className="mt-6 flex justify-center">
+                <button
+                    onClick={handleAddToCart}
+                    className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white px-6 py-3 font-semibold rounded transition"
+                >
+                    Lägg till i kundvagn
+                </button>
+            </div>
 
-            {/* Villkorlig rendering: visar ett meddelande när en produkt läggs till i kundkorgen */}
+            {/* Feedback */}
             {added && (
-                <span className="block mt-3 text-base font-semibold text-green-700">
+                <span className="block mt-3 text-sm font-semibold text-green-700 text-center">
                     Tillagd i kundvagnen
                 </span>
             )}
         </div>
-
     )
 }

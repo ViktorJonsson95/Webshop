@@ -86,7 +86,8 @@ export default function ShoppingCart({ showCheckoutButton = true }) {
                         <p>{`Totalpris: ${total} kr`}</p>
                         <p>{`Totalt antal artiklar: ${totalQuantity} st`}</p>
                         {showCheckoutButton && (<Link to="/checkout">
-                            <button style={{ cursor: 'pointer', padding: '10px', width: '100%' }}>
+                            <button className="border mt-2 p-1 cursor-pointer bg-green-600 text-white px-8 py-3 font-semibold mx-auto rounded transition-all duration-200 
+                                hover:bg-green-700 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0">
                                 Gå till kassan
                             </button>
                         </Link>)}

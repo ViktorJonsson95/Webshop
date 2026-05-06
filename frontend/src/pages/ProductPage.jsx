@@ -47,29 +47,38 @@ export default function ProductPage() {
     }
 
     return (
-        <div className='flex flex-col justify-center'>
-            <h1>Product Page</h1>
+        <div className='max-w-3xl mx-auto px-4 py-8 text-center'>
+            <h1 className="text-2xl text-slate-800 mt-4 font-bold">
+                {data.name}
+            </h1>
             <img
-                className='w-2/4'
+                className="w-full max-w-md mx-auto block"
                 src={
                     data.imageUrl && data.imageUrl.trim() !== ""
                         ? data.imageUrl
                         : "/placeholder640x640.png"
                 }
-                alt={data.name}></img>
-            <h2>{data.name}</h2>
-            <p>{data.price}</p>
-            <p>{data.description}</p>
+                alt={data.name}>
+            </img>
+
+            <p className="mt-8 text-3xl font-bold text-slate-800">
+                {data.price} kr
+            </p>
+
+            <p className="mt-3 max-w-md mx-auto text-center text-slate-600 leading-loose">
+                {data.description}
+            </p>
 
             <button
                 onClick={handleAddToCart}
-                className="bg-blue-500 text-white px-4 py-2 rounded"
+                className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 font-semibold mt-6 rounded transition inline-block"
             >
                 Lägg till i kundvagn
             </button>
 
+            {/* Villkorlig rendering: visar ett meddelande när en produkt läggs till i kundkorgen */}
             {added && (
-                <span className="text-green-500 text-sm">
+                <span className="block mt-3 text-base font-semibold text-green-700">
                     Tillagd i kundvagnen
                 </span>
             )}

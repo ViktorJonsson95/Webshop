@@ -209,39 +209,53 @@ export default function Startpage() {
         </div>
       )}
 
-      {/* Produkt-grid */}
+      {/* Produkter */}
       <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
         {sortedProducts.map((product) => (
-          <div key={product.id} className="border p-2">
-
-            {/* Länk till produktsida */}
+          <div
+            key={product.id}
+            className={`
+            bg-slate-50 
+            border border-gray-200 
+            rounded-xl 
+            p-4 shadow-sm 
+            text-slate-800 
+            px-8 py-3 
+            font-semibold
+            mx-auto 
+            rounded
+        `}>
             <Link to={`/product/${product.id}`}>
-              <img
-                src={
-                  product.imageUrl && product.imageUrl.trim() !== ""
-                    ? product.imageUrl
-                    : "/placeholder640x640.png" // fallback bild
-                }
-                alt={product.name}
-              />
+              <div className="w-full aspect-square bg-white rounded-lg flex items-center justify-center p-4">
+                <img
+                  src={
+                    product.imageUrl && product.imageUrl.trim() !== ""
+                      ? product.imageUrl
+                      : "/placeholder640x640.png"
+                  }
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
               <h3>{product.name}</h3>
               <p>{product.price} kr</p>
+
             </Link>
 
             {/* Lägg till i kundvagn */}
             <button
-              className="border mt-2 p-1 cursor-pointer"
+              className="border mt-2 p-1 cursor-pointer bg-green-600 text-white px-8 py-3 font-semibold mx-auto rounded transition-all duration-200 
+                hover:bg-green-700 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
               onClick={() => addToCart(product)}
             >
               Lägg till i kundvagn
             </button>
-
-            {/* Feedback när produkt lagts till */}
-            {added && (
-              <span>
-                Tillagd i Kundvagnen
+            {/* {added && (
+              <span className="block mt-2 text-center text-sm font-bold text-green-800">
+                Tillagd i kundvagnen
               </span>
-            )}
+            )} */}
           </div>
         ))}
       </div>

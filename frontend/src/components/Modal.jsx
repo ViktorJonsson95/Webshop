@@ -1,46 +1,64 @@
-// importerar useEffect för att kunna hantera events när komponenter renderas
+// importerar useEffect för att kunna lyssna på events (t.ex. ESC-tangent)
 import { useEffect } from "react"
 
-// Modal komponent som tar emot props: open (boolean), onClose (funktion) och children (innehåll att visa i modalen)
+// Modal-komponent som visar en drawer från höger
+// open = om modalen ska visas
+// onClose = funktion för att stänga modalen
+// children = innehållet (t.ex. ShoppingCart)
 export default function Modal({ open, onClose, children }) {
-  // lyssna efter tangenttryckningar
+
+  // Lyssnar efter ESC för att stänga modalen
   useEffect(() => {
-    // trycker på ESC körs onClose funktionen
+    // Om användaren trycker ESC → stäng modalen
     const handleEsc = (e) => e.key === "Escape" && onClose()
-    // lägg bara till event listener om madal är öppen
+
+    // Lägg bara till event listener när modalen är öppen
     if (open) window.addEventListener("keydown", handleEsc)
-    // städa upp event listener när komponenten avmonteras eller när open/onClose ändras
+
+    // Cleanup: ta bort event listener när komponenten uppdateras/avmonteras
     return () => window.removeEventListener("keydown", handleEsc)
   }, [open, onClose])
-  // om modalen inte ska vara öppen visas ingeting
+
+  // Om modalen inte ska visas → rendera inget
   if (!open) return null
 
   return (
-    // wrapper för hela modalen
+    // Wrapper som täcker hela skärmen
     <div className="fixed inset-0 z-50">
-      {/* Overlay */}
+
+      {/* Overlay (bakgrund) */}
       <div
         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-        // klick på bakgrunden stänger modalen
+        // Klick på overlay → stäng modalen
         onClick={onClose}
       />
 
-      {/* själva modal-fönstret */}
+      {/* Drawer (själva kundvagnen) */}
       <div
-        className="absolute right-0 top-0 h-full w-80 bg-slate-900 text-white p-6 shadow-xl"
-        // stoppar klick inuti modalen från att stänga den
-
-      {/* Drawer */}
-      <div
-        className="absolute right-0 top-0 h-full w-full max-w-sm bg-blue-100 text-slate-900 p-4 shadow-xl overflow-y-auto"
+        className="
+          absolute right-0 top-0 
+          h-full w-full max-w-sm   // full bredd på mobil, begränsad på större skärmar
+          bg-blue-100             // samma färg som navbar
+          text-slate-900 
+          p-4 
+          shadow-xl 
+          overflow-y-auto         // gör att man kan scrolla om innehållet är långt
+        "
+        // Stoppar klick inuti drawern från att stänga modalen
         onClick={(e) => e.stopPropagation()}
       >
-        <button onClick={onClose} className="mb-4 text-lg">
+
+        {/* Stäng-knapp */}
+        <button
+          onClick={onClose}
+          className="mb-4 text-lg"
+        >
           ✕
         </button>
 
-        {/* här visas innehållet i modalen */}
+        {/* Här renderas innehållet (t.ex. ShoppingCart) */}
         {children}
+
       </div>
     </div>
   )

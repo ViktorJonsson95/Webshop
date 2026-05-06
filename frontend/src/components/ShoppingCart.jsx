@@ -67,7 +67,7 @@ export default function ShoppingCart({ showCheckoutButton = true }) {
                         {cartItems.map((product) => (
                             <li
                                 key={product.id}
-                                className="flex gap-3 border-b border-slate-300 pb-3"
+                                className="flex gap-3 border-b border-slate-300 px-3"
                             >
                                 {/* Bild */}
                                 <div className="w-16 h-16 bg-white rounded-md flex items-center justify-center overflow-hidden shrink-0">

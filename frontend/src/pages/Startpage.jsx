@@ -173,9 +173,20 @@ export default function Startpage() {
         className="mb-4 cursor-pointer"
         onClick={() => setParam("tag", "vår")}
       >
-        <div className="bg-green-100 p-6 text-center rounded">
-          <h2 className="text-xl font-bold">Spring Collection</h2>
-          <p>Klicka för att se vårskor</p>
+        <div
+          className="h-40 sm:h-56 rounded-lg bg-center bg-cover flex  justify-center text-white relative"
+          style={{
+            backgroundImage: "url('https://t3.ftcdn.net/jpg/04/87/54/32/360_F_487543265_i5SFQa9Cd7Ukh99j4JqYiOvr3kALrKJw.jpg')"
+          }}
+        >
+          <div className="absolute inset-0 bg-black/30 rounded-lg" />
+
+          <div className="relative z-10 text-center item start top-6">
+            <h2 className="text-lg sm:text-2xl font-bold item start top-6">
+              Spring Collection
+            </h2>
+            <p>Klicka för att se vårskor</p>
+          </div>
         </div>
       </div>
 

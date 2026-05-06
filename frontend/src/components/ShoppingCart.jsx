@@ -9,7 +9,8 @@ export default function ShoppingCart({ showCheckoutButton = true }) {
     const queryClient = useQueryClient()
 
 
-    // Öka antalet produkter
+    // Hantera antalet produkter i varukorgen samt
+    // uppdatera cachen med den nya ändringen
     const increaseQuantity = (id) => {
         const updatedCart = cartItems.map(product =>
             product.id === id ? { ...product, quantity: (product.quantity ?? 1) + 1 }
@@ -39,7 +40,7 @@ export default function ShoppingCart({ showCheckoutButton = true }) {
         queryClient.setQueryData(["cart"], updatedCart)
     }
 
-    // --- TOTALSUMMA OCH CHECKOUT
+    // Totalpris och checkout
 
     // Beräkna totalsumma (med fallback till 1 för quantity)
     const total = cartItems.reduce((acc, product) => {
@@ -51,6 +52,7 @@ export default function ShoppingCart({ showCheckoutButton = true }) {
         return acc + (product.quantity || 1);
     }, 0);
 
+    // Visa produkter, totalpris och checkout-knapp
     return (
         <div className="shopping-cart">
             <h2 className='text-white'>Din varukorg</h2>

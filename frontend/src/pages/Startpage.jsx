@@ -157,8 +157,8 @@ export default function Startpage() {
         {categories.map((cat) => (
           <button
             className={`p-2 ${activeCategory === cat
-                ? "bg-blue-200 font-bold"
-                : "bg-transparent"
+              ? "bg-blue-200 font-bold"
+              : "bg-transparent"
               }`}
             key={cat}
             onClick={() => setCategory(cat)}
@@ -210,23 +210,14 @@ export default function Startpage() {
       )}
 
       {/* Produkter */}
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 px-2">
         {sortedProducts.map((product) => (
           <div
             key={product.id}
-            className={`
-            bg-slate-50 
-            border border-gray-200 
-            rounded-xl 
-            p-4 shadow-sm 
-            text-slate-800 
-            px-8 py-3 
-            font-semibold
-            mx-auto 
-            rounded
-        `}>
+            className="bg-slate-50 border border-gray-200 rounded-xl p-3 shadow-sm flex flex-col h-full"
+          >
             <Link to={`/product/${product.id}`}>
-              <div className="w-full aspect-square bg-white rounded-lg flex items-center justify-center p-4">
+              <div className="w-full aspect-square bg-white rounded-lg flex items-center justify-center p-2 mb-2">
                 <img
                   src={
                     product.imageUrl && product.imageUrl.trim() !== ""

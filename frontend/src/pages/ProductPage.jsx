@@ -3,13 +3,14 @@ import { useParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react'
 
+// Hämta produktens id och data
 export default function ProductPage() {
     const { id } = useParams();
     const { data, isLoading, error } = useProduct(id);
     const [added, setAdded] = useState(false);
     const queryClient = useQueryClient();
 
-    if (isLoading) return <p>Loading, please wait...</p>
+    if (isLoading) return <p>Laddar produkt, var god vänta</p>
     //Om det blev fel ELLER om data är tom, visa felmeddelande
     if (error) {
         return <p>{error?.message || "Något gick fel"}</p>
@@ -19,15 +20,18 @@ export default function ProductPage() {
         return <p>Produkten hittades inte</p>
     }
 
+    // Uppdatera antal om produkten redan finns i kundvagnen
+    // Annars - lägg till produkten
     const handleAddToCart = () => {
         const raw = localStorage.getItem("cart")
         const cart = raw ? JSON.parse(raw) : []
 
-        // kolla om produkten redan finns
+        // Kolla om produkten redan finns i kundvagnen
         const existing = cart.find(item => item.id === data.id)
 
         let updatedCart
-
+        
+        // Uppdatera antal om produkten redan finns i kundvagnen
         if (existing) {
             updatedCart = cart.map(item =>
                 item.id === data.id
@@ -38,14 +42,16 @@ export default function ProductPage() {
             updatedCart = [...cart, { ...data, quantity: 1 }]
         }
 
+        // Uppdatera cachen med den nya listan
         localStorage.setItem("cart", JSON.stringify(updatedCart))
         queryClient.setQueryData(["cart"], updatedCart)
 
-        // visa feedback
+
         setAdded(true)
         setTimeout(() => setAdded(false), 1500)
     }
 
+    // Produktinformation: namn, bild, pris och beskrivning
     return (
         <div className="max-w-3xl mx-auto px-4 py-6">
 
@@ -85,6 +91,7 @@ export default function ProductPage() {
                 </button>
             </div>
 
+            {/* Visa ett meddelande när en produkt läggs till i kundvagnen */}
             {/* Feedback */}
             {added && (
                 <span className="block mt-3 text-sm font-semibold text-green-700 text-center">

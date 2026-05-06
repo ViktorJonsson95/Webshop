@@ -1,16 +1,116 @@
-# React + Vite
+# Webshop Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Beskrivning
 
-Currently, two official plugins are available:
+Detta är en enkel webshop med separat frontend och backend.
+Användaren kan:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+* Se produkter
+* Filtrera och sortera produkter
+* Lägga till produkter i kundvagn
+* Justera antal i kundvagnen
+* Slutföra en order
 
-## React Compiler
+Admin-sidan gör det möjligt att:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+* Skapa produkter
+* Uppdatera produkter
+* Ta bort produkter
+* Se och ta bort ordrar
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Teknik
+
+**Frontend**
+
+* React
+* React Router
+* TanStack Query
+* Tailwind CSS
+
+**Backend**
+
+* Node.js
+* Express
+
+---
+
+## Installation
+
+### 1. Klona projektet
+
+```bash
+git clone <repo-url>
+cd webshop
+```
+
+---
+
+### 2. Installera dependencies
+
+Frontend:
+
+```bash
+cd frontend
+npm install
+```
+
+Backend:
+
+```bash
+cd ../backend
+npm install
+```
+
+---
+
+### 3. Lägg till serviceAccountKey.json
+
+Backend kräver en service account-nyckel.
+
+1. Skapa en fil i backend-mappen:
+
+```
+backend/serviceAccountKey.json
+```
+
+2. Be projektägaren om nyckeln och klistra in innehållet i filen.
+
+
+---
+
+### 4. Starta projektet
+
+Starta backend:
+
+```bash
+cd backend
+npm run dev
+```
+
+Starta frontend (i ny terminal):
+
+```bash
+cd frontend
+npm run dev
+```
+
+---
+
+## Struktur
+
+```
+webshop/
+  frontend/
+  backend/
+```
+
+---
+
+## Noteringar
+
+* Installera alltid paket i rätt mapp (frontend/backend)
+* Backend måste vara igång för att frontend ska fungera
+* Kundvagnen sparas i localStorage
+* serviceAccountKey.json är en känslig fil och delas separat

@@ -25,7 +25,7 @@ export default function AdminPage() {
     // Hämtar kategorier (baserat på produkter)
     const { categories } = useCategories()
 
-    // Hämtar ordrar
+    // Hämtar ordrar med destructuring och alias
     const {
         data: orders,
         isLoading: ordersLoading,
@@ -131,49 +131,54 @@ export default function AdminPage() {
     }
 
     return (
-        <div className="p-4">
-            <h1>Admin</h1>
+        <div className="max-w-5xl mx-auto px-4 py-6 text-slate-800">
 
-            {/* Visar feedback till användaren */}
-            {message && <p>{message}</p>}
+            <h1 className="text-2xl font-bold mb-4">Admin</h1>
 
-            {/* Form för att skapa / uppdatera produkt */}
-            <form onSubmit={handleSubmit} className="flex flex-col gap-2 mb-6">
+            {message && (
+                <p className="mb-4 p-3 rounded bg-green-100 text-green-800 text-sm">
+                    {message}
+                </p>
+            )}
+
+            {/* FORM */}
+            <form
+                onSubmit={handleSubmit}
+                className="bg-white rounded-xl shadow-md p-4 flex flex-col gap-3 mb-8"
+            >
                 <input
+                    className="border rounded p-2"
                     placeholder="Namn"
                     value={form.name}
-                    onChange={(e) =>
-                        setForm({ ...form, name: e.target.value })
-                    }
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
                 />
+
                 <input
+                    className="border rounded p-2"
                     type="number"
                     placeholder="Pris"
                     value={form.price}
-                    onChange={(e) =>
-                        setForm({ ...form, price: e.target.value })
-                    }
+                    onChange={(e) => setForm({ ...form, price: e.target.value })}
                 />
+
                 <input
+                    className="border rounded p-2"
                     placeholder="Bild URL"
                     value={form.imageUrl}
-                    onChange={(e) =>
-                        setForm({ ...form, imageUrl: e.target.value })
-                    }
+                    onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
                 />
+
                 <textarea
+                    className="border rounded p-2"
                     placeholder="Beskrivning"
                     value={form.description}
-                    onChange={(e) =>
-                        setForm({ ...form, description: e.target.value })
-                    }
+                    onChange={(e) => setForm({ ...form, description: e.target.value })}
                 />
-                {/* Dropdown för befintliga kategorier */}
+
                 <select
+                    className="border rounded p-2"
                     value={form.category}
-                    onChange={(e) =>
-                        setForm({ ...form, category: e.target.value })
-                    }
+                    onChange={(e) => setForm({ ...form, category: e.target.value })}
                 >
                     <option value="">Välj kategori</option>
                     {categories.map((cat) => (
@@ -183,17 +188,17 @@ export default function AdminPage() {
                     ))}
                 </select>
 
-                {/* Input för att skriva egen kategori */}
                 <input
+                    className="border rounded p-2"
                     placeholder="Ny kategori"
                     value={form.category}
-                    onChange={(e) => {
+                    onChange={(e) =>
                         setForm({ ...form, category: e.target.value })
-                    }}
+                    }
                 />
 
-                {/* Taggar som comma-separated string */}
                 <input
+                    className="border rounded p-2"
                     placeholder="Taggar (comma separated)"
                     value={form.tags}
                     onChange={(e) =>
@@ -201,69 +206,87 @@ export default function AdminPage() {
                     }
                 />
 
-                {/* Knapp ändras beroende på om vi redigerar eller skapar */}
-                <button className="border p-2" type="submit">
+                <button className="bg-green-600 text-white py-2 rounded font-semibold hover:bg-green-700 transition">
                     {editingProduct ? "Uppdatera produkt" : "Lägg till produkt"}
                 </button>
             </form>
 
-            {/* Lista produkter */}
-            <div className="flex flex-col gap-2">
+            {/* PRODUKTER */}
+            <div className="grid gap-4 sm:grid-cols-2">
                 {products.map((p) => (
-                    <div key={p.id} className=" flex justify-between border p-2">
-                        {/* Bild med fallback */}
+                    <div
+                        key={p.id}
+                        className="bg-white rounded-xl shadow-sm border p-4 flex flex-col gap-3"
+                    >
                         <img
-                            className="size w-40 h-40"
+                            className="w-full h-40 object-contain bg-slate-50 rounded"
                             src={p.imageUrl && p.imageUrl.trim() !== "" ? p.imageUrl : placeholder}
                             alt={p.name}
                             onError={(e) => {
                                 e.currentTarget.src = placeholder
                             }}
                         />
-                        <p>{p.name} – {p.price} kr</p>
-                        <p>{p.description}</p>
-                        <p className="color text-blue-800">{p.category}</p>
 
-                        {/* Ta bort produkt */}
-                        <button className="border p-2" onClick={() => handleDelete(p.id)}>
-                            Ta bort
-                        </button>
+                        <div>
+                            <p className="font-semibold">{p.name}</p>
+                            <p className="text-sm text-slate-600">{p.price} kr</p>
+                            <p className="text-sm text-slate-500 line-clamp-2">
+                                {p.description}
+                            </p>
+                            <p className="text-xs text-blue-600 mt-1">{p.category}</p>
+                        </div>
 
-                        {/* Sätt edit mode */}
-                        <button onClick={() => {
-                            setEditingProduct(p)
-                            setForm({
-                                ...p,
-                                tags: p.tags?.join(", ") || ""
-                            })
-                        }}>
-                            Redigera
-                        </button>
+                        <div className="flex gap-2 mt-auto">
+                            <button
+                                className="flex-1 bg-red-500 text-white py-1 rounded hover:bg-red-600 transition"
+                                onClick={() => handleDelete(p.id)}
+                            >
+                                Ta bort
+                            </button>
+
+                            <button
+                                className="flex-1 border py-1 rounded hover:bg-slate-100 transition"
+                                onClick={() => {
+                                    setEditingProduct(p)
+                                    setForm({
+                                        ...p,
+                                        tags: p.tags?.join(", ") || ""
+                                    })
+                                }}
+                            >
+                                Redigera
+                            </button>
+                        </div>
                     </div>
                 ))}
             </div>
 
-            {/* Orders */}
-            <h2 className="mt-8">Ordrar</h2>
+            {/* ORDERS */}
+            <h2 className="text-xl font-bold mt-10 mb-4">Ordrar</h2>
 
             {ordersLoading && <p>Laddar ordrar...</p>}
             {ordersError && <p>{ordersError}</p>}
 
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-4">
                 {orders?.map((order) => (
-                    <div key={order.id} className="border p-2">
-                        <p><strong>Order ID:</strong> {order.id}</p>
+                    <div
+                        key={order.id}
+                        className="bg-white rounded-xl shadow-sm border p-4"
+                    >
+                        <p className="font-semibold mb-2">
+                            Order ID: {order.id}
+                        </p>
 
-                        {/* Lista produkter i ordern */}
-                        {order.products?.map((p, i) => (
-                            <p key={i}>
-                                {p.name} – {p.price} kr - {p.quantity} st
-                            </p>
-                        ))}
+                        <div className="text-sm text-slate-600">
+                            {order.products?.map((p, i) => (
+                                <p key={i}>
+                                    {p.name} – {p.price} kr ({p.quantity} st)
+                                </p>
+                            ))}
+                        </div>
 
-                        {/* Ta bort order */}
                         <button
-                            className="border p-2 mt-2"
+                            className="mt-3 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
                             onClick={() => handleDeleteOrder(order.id)}
                         >
                             Ta bort order

@@ -8,24 +8,31 @@ import { useCategories } from "../hooks/useCategories"
 import placeholder from "../assets/placeholder640x640.png"
 import { useUpdateProduct } from "../hooks/useUpdateProduct"
 
-
-
+// Admin-sida för att hantera produkter och ordrar
 export default function AdminPage() {
+    // Hämtar produkter
     const { data: products, isLoading, error } = useProducts()
+
+    // State för att veta om vi redigerar en produkt
     const [editingProduct, setEditingProduct] = useState(null)
+
+    // Mutation hooks för CRUD-operationer
     const createMutation = useCreateProduct()
     const deleteMutation = useDeleteProduct()
     const deleteOrderMutation = useDeleteOrder()
-    const { categories } = useCategories()
     const updateMutation = useUpdateProduct()
 
+    // Hämtar kategorier (baserat på produkter)
+    const { categories } = useCategories()
 
+    // Hämtar ordrar
     const {
         data: orders,
         isLoading: ordersLoading,
         error: ordersError,
     } = useOrders()
 
+    // Form state för produkt
     const [form, setForm] = useState({
         name: "",
         price: "",
@@ -35,15 +42,19 @@ export default function AdminPage() {
         tags: ""
     })
 
+    // Meddelande till användaren (success/error)
     const [message, setMessage] = useState("")
 
+    // Loading / error för produkter
     if (isLoading) return <p>Laddar...</p>
     if (error) return <p>Fel: {error.message}</p>
 
+    // Hanterar submit (create + update)
     const handleSubmit = async (e) => {
         e.preventDefault()
         setMessage("")
 
+        // Enkel validering
         if (
             !form.name.trim() ||
             !form.price ||
@@ -56,26 +67,30 @@ export default function AdminPage() {
         }
 
         try {
+            // Bygger payload
             const payload = {
                 ...form,
-                price: Number(form.price),
+                price: Number(form.price), // konverterar till number
                 tags: form.tags
-                    .split(",")
-                    .map((t) => t.trim())
-                    .filter(Boolean),
+                    .split(",")        // dela på komma
+                    .map((t) => t.trim()) // trimma whitespace
+                    .filter(Boolean), // ta bort tomma värden
             }
 
             if (editingProduct) {
+                // Uppdatera produkt
                 await updateMutation.mutateAsync({
                     id: editingProduct.id,
                     data: payload,
                 })
                 setMessage("Produkt uppdaterad")
             } else {
+                // Skapa ny produkt
                 await createMutation.mutateAsync(payload)
                 setMessage("Produkt skapad")
             }
 
+            // Reset form
             setForm({
                 name: "",
                 price: "",
@@ -85,12 +100,15 @@ export default function AdminPage() {
                 tags: "",
             })
 
+            // Avsluta edit mode
             setEditingProduct(null)
         } catch (err) {
+            // Visa error från backend
             setMessage(err.message)
         }
     }
 
+    // Ta bort produkt
     const handleDelete = async (id) => {
         setMessage("")
 
@@ -102,6 +120,7 @@ export default function AdminPage() {
         }
     }
 
+    // Ta bort order
     const handleDeleteOrder = async (id) => {
         try {
             await deleteOrderMutation.mutateAsync(id)
@@ -111,13 +130,14 @@ export default function AdminPage() {
         }
     }
 
-
     return (
         <div className="p-4">
             <h1>Admin</h1>
 
+            {/* Visar feedback till användaren */}
             {message && <p>{message}</p>}
 
+            {/* Form för att skapa / uppdatera produkt */}
             <form onSubmit={handleSubmit} className="flex flex-col gap-2 mb-6">
                 <input
                     placeholder="Namn"
@@ -148,6 +168,7 @@ export default function AdminPage() {
                         setForm({ ...form, description: e.target.value })
                     }
                 />
+                {/* Dropdown för befintliga kategorier */}
                 <select
                     value={form.category}
                     onChange={(e) =>
@@ -161,6 +182,8 @@ export default function AdminPage() {
                         </option>
                     ))}
                 </select>
+
+                {/* Input för att skriva egen kategori */}
                 <input
                     placeholder="Ny kategori"
                     value={form.category}
@@ -168,6 +191,8 @@ export default function AdminPage() {
                         setForm({ ...form, category: e.target.value })
                     }}
                 />
+
+                {/* Taggar som comma-separated string */}
                 <input
                     placeholder="Taggar (comma separated)"
                     value={form.tags}
@@ -176,15 +201,19 @@ export default function AdminPage() {
                     }
                 />
 
+                {/* Knapp ändras beroende på om vi redigerar eller skapar */}
                 <button className="border p-2" type="submit">
                     {editingProduct ? "Uppdatera produkt" : "Lägg till produkt"}
                 </button>
             </form>
 
+            {/* Lista produkter */}
             <div className="flex flex-col gap-2">
                 {products.map((p) => (
                     <div key={p.id} className=" flex justify-between border p-2">
-                        <img className="size w-40 h-40"
+                        {/* Bild med fallback */}
+                        <img
+                            className="size w-40 h-40"
                             src={p.imageUrl && p.imageUrl.trim() !== "" ? p.imageUrl : placeholder}
                             alt={p.name}
                             onError={(e) => {
@@ -194,9 +223,13 @@ export default function AdminPage() {
                         <p>{p.name} – {p.price} kr</p>
                         <p>{p.description}</p>
                         <p className="color text-blue-800">{p.category}</p>
+
+                        {/* Ta bort produkt */}
                         <button className="border p-2" onClick={() => handleDelete(p.id)}>
                             Ta bort
                         </button>
+
+                        {/* Sätt edit mode */}
                         <button onClick={() => {
                             setEditingProduct(p)
                             setForm({
@@ -210,6 +243,7 @@ export default function AdminPage() {
                 ))}
             </div>
 
+            {/* Orders */}
             <h2 className="mt-8">Ordrar</h2>
 
             {ordersLoading && <p>Laddar ordrar...</p>}
@@ -220,12 +254,14 @@ export default function AdminPage() {
                     <div key={order.id} className="border p-2">
                         <p><strong>Order ID:</strong> {order.id}</p>
 
+                        {/* Lista produkter i ordern */}
                         {order.products?.map((p, i) => (
                             <p key={i}>
                                 {p.name} – {p.price} kr - {p.quantity} st
                             </p>
-
                         ))}
+
+                        {/* Ta bort order */}
                         <button
                             className="border p-2 mt-2"
                             onClick={() => handleDeleteOrder(order.id)}

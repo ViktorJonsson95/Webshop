@@ -1,45 +1,50 @@
-import { useEffect, useState } from "react";
-import { useCreateOrder } from "../hooks/useCreateOrder"
-import ShoppingCart from "../components/ShoppingCart";
-import useCart from "../hooks/useCart";
-import { useQueryClient } from "@tanstack/react-query"
+import { useEffect, useState } from "react"; // importera state, minne för komponenten
+import { useCreateOrder } from "../hooks/useCreateOrder" // costum hook för API-anrop, skapa order
+import ShoppingCart from "../components/ShoppingCart"; // cart komponenten för returnen
+import useCart from "../hooks/useCart"; // costum hook för localstorage
+import { useQueryClient } from "@tanstack/react-query" // för att uppdatera cart efter köp
 
 
 export default function CheckoutPage() {
+    // mutate är funktion som skickar ordern
     const { mutate, isLoading, error } = useCreateOrder();
 
-    const [orderSuccess, setOrderSuccess] = useState(false)
-    const [errorMessage, setErrorMessage] = useState("")
-    const { data: cartItems = [] } = useCart()
-    const queryClient = useQueryClient()
+    const [orderSuccess, setOrderSuccess] = useState(false) // om ordern lyckades eller ej
+    const [errorMessage, setErrorMessage] = useState("") // felmeddelande till användaren
+    const { data: cartItems = [] } = useCart() // hämtar produkter i kundvagnen, tom array om inget finns
+    const queryClient = useQueryClient() // för att uppdatera cache - kundvagnen
 
+    // spara användarens input
     const [form, setForm] = useState({
         name: "",
         email: "",
         address: ""
     })
 
-    // Total i checkout
+    // Total i checkout, loopar igenom produkter, startar på 0
     const total = cartItems.reduce((sum, item) => {
         return sum + item.price * item.quantity
     }, 0)
 
-    // Skicka order
+    // Skicka order, kollar att alla fält är i fyllda
     const handleOrder = () => {
         if (!form.name || !form.email || !form.address) {
             setErrorMessage("Fyll i alla dina uppgifter!")
             return
         }
 
+        // skapar order objekt
         const order = {
             customer: form,
             products: cartItems,
             total: total
         }
 
+        // skickar order (usecreateorder)
         mutate(order, {
             onSuccess: () => {
                 localStorage.removeItem("cart")
+                // hämta nya cart
                 queryClient.invalidateQueries(["cart"])
                 setOrderSuccess(true)
                 setErrorMessage("")
